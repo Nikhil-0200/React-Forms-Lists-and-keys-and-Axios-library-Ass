@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script type="text/babel">
+    // Your  code will go here
+
+    let { useState, useEffect } = React;
+
+    // DISPLAYDATA COMPONENT TO DISPLAY MAPPED DATA ON UI
+
+    let DisplayData = ({ ele }) => {
+      // DESTRUCTING ELE PROPERTIES TO RENDER ON UI
+
+      let { id, avatar, email, first_name, last_name } = ele;
+      return (
+        <div>
+          <img src={avatar} alt={first_name} />
+          <p>{`${first_name} ${last_name}`}</p>
+          <p>{`Email: ${email}`}</p>
+        </div>
+      );
+    };
+
+    // MAIN COMPONENT
+
+    let UserProfile = () => {
+      let [user, setUser] = useState([]);
+      let [search, setSearch] = useState("");
+
+      //   USE STATES FOR MANAGING SEARCHED INPUT DATA & FETCHDATA.
+
+      useEffect(() => {
+        fetchData();
+      }, []);
+
+      //   USEEFFECT TO HANDLE SIDEEFFECT CORRECTLY.
+
+      async function fetchData() {
+        try {
+          let res = await axios({
+            method: "get",
+            baseURL: `https://reqres.in/api/users?page=2`,
+          });
+          setUser(res.data.data);
+        } catch (error) {
+          console.log("error");
+        }
+      }
+
+      //   FETCHING DATA USING AXIOS
+
+      function handleInput(event) {
+        setSearch(event.target.value);
+      }
+
+      //   GETTING INPUT VALUE IN THIS HANDLEINPUT FUNCTION AND UPDATING THE STATE.
+
+      const filterData = user.filter((ele) =>
+        ele.first_name.toLowerCase().includes(search.toLowerCase())
+      );
+
+      //   CREATED A FILTERDATA VARIABLE TO STORE FILTERED DATA BASED ON SEARCH IN INPUT.
+
+      return (
+        <div>
+          <div>
+            <h1>User Input</h1>
+            <input
+              type="text"
+              placeholder="Enter Name"
+              value={search}
+              onChange={handleInput}
+            />
+            <br />
+            <br />
+          </div>
+          {filterData.map((ele) => (
+            <DisplayData key={ele.id} ele={ele} />
+          ))}
+        </div>
+      );
+    };
+
+    let root = document.getElementById("root");
+    let reactRoot = ReactDOM.createRoot(root);
+    reactRoot.render(<UserProfile />);
+  </script>
+</html>
