@@ -1,0 +1,28 @@
+{
+  "todos": [
+    {
+      "title": "Study maths",
+      "status": true,
+      "assignee": "Nikhil",
+      "id": 1
+    },
+    {
+      "title": "Study Eng",
+      "status": false,
+      "assignee": "Karan",
+      "id": 2
+    },
+    {
+      "title": "learn music",
+      "status": false,
+      "assignee": "Nikhil",
+      "id": 3
+    },
+    {
+      "title": "learn spanish",
+      "status": false,
+      "assignee": "Aman",
+      "id": 4
+    }
+  ]
+}
