@@ -20,16 +20,31 @@
   <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <!-- Used CDN of Axios for implementing fetch functionality using axios -->
+
   <script type="text/babel">
     let { useState, useEffect } = React;
 
+    // destructed useState & useEffect from React to use them below.
+
+    // This is the ShowData component to show the data fetched from endpoint on UI.
+
     let ShowData = () => {
       let [data, setData] = useState([]);
+
+      // data state variable for storing the fetched data.
+
       let [originalData, setOriginalData] = useState([]);
 
+      // originalData state variable for filtering functionality.
+
+      // useEffect hook for handling side effect or the work for which we have to go out of component scope.
       useEffect(() => {
         getData();
       }, []);
+
+      // getData function for getting data from endpoint by using axios
 
       async function getData() {
         try {
@@ -44,6 +59,8 @@
         }
       }
 
+      // handleDelete function for making DELETE request to endpoint.
+
       let handleDelete = async (id) => {
         try {
           let res = await axios({
@@ -55,13 +72,22 @@
         }
       };
 
+      // getAllData function for handling on click functionality of Get All Data Button.
+
       let getAllData = () => {
         getData();
       };
 
+      // showIncompleteTasks function for handling on click functionality of Show Incomplete Tasks Button.
+      // In this we are just filtering data state variable whose status are not true.
+
       let showIncompleteTasks = () => {
         setData((preValue) => preValue.filter((ele) => ele.status !== true));
       };
+
+      // handleFilter function for handling on Change functionality of Select Tag.
+      // In this we are just filtering data whose assignee matches with assignee of select tag.
+      // Here we have taken help of other state variable - (originalData) because when we were doing with (prevValue) then on filter it was eliminating the non display data for ever and they do not render again when their values matches.
 
       let handleFilter = (e) => {
         setData(originalData.filter((ele) => ele.assignee === e.target.value));
@@ -72,7 +98,7 @@
           <br />
           <br />
           <button onClick={getAllData}>Get All Tasks</button>
-          <button onClick={showIncompleteTasks}>showIncompleteTasks</button>
+          <button onClick={showIncompleteTasks}>Show Incomplete Tasks</button>
 
           <br />
           <br />
@@ -111,6 +137,7 @@
 
       async function fetchData() {
         try {
+          // here we have used (await Promise.all) to loop over array data to pass ele.title & other data in data object.
           await Promise.all(
             array.map(async (ele) => {
               let res = await axios({
@@ -140,6 +167,12 @@
       }
 
       function handleChange(event) {
+        // here what we do in this function is that when user fills form then data from FORM comes here and it stores them in task state variable, but before storing them in task state variable.
+
+        // vale variable is created, which tell about that type of input we are passing, so if event.target.type = "checkbox" so it will be event.target.checked else it will be event.target.value.
+
+        // if specifying (value), we create a new variable by the name of (newData) which stores data in object key value pair and the in the last we update task state variable.
+
         const value =
           event.target.type === "checkbox"
             ? event.target.checked
@@ -151,6 +184,8 @@
       useEffect(() => {
         fetchData();
       }, [array]);
+
+      // here useEffect invokes fetchData function which is fetching data from end point. and this useEffect is renders when array their is change is array state variable.
 
       return (
         <div>
